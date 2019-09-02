@@ -15,7 +15,6 @@ int main(int argc, const char** argv) {
     //variables
     int inputNum;
     int freq = 0;
-    bool dupFound = 0;
 
     //opening input file
     std::ifstream file("input.txt", std::ifstream::in);
@@ -34,5 +33,23 @@ int main(int argc, const char** argv) {
     cout << freq << endl; //printing final frequency
 
     //--------------------PART 2--------------------//
+    std::vector<int> newFreqs; //vector containing new frequencies
 
+    //variables
+    bool dupFound = 0;
+    freq = 0;
+
+    while(!dupFound) { //while no duplicated freq is found
+        for(auto i : changes) {
+            freq += i;
+
+            if(std::find(newFreqs.begin(), newFreqs.end(), freq) != newFreqs.end()) {
+                dupFound = 1;
+                break;
+            }
+            newFreqs.push_back(freq);
+        }
+    }
+
+    cout << freq << endl; //print duplicate freq
 }
