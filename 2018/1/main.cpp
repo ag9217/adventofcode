@@ -21,11 +21,9 @@ int main(int argc, const char** argv) {
     std::ifstream file("input.txt", std::ifstream::in);
     
     //pushing all numbers in input file into vector
-    while(!file.eof()) {
-       file >> inputNum;
+    while(file >> inputNum) {
        changes.push_back(inputNum);
     }
-    changes.pop_back(); //last number is put in vector twice
 
     //calculating sum of frequencies
     for(int i = 0; i < changes.size(); i++)
@@ -36,5 +34,5 @@ int main(int argc, const char** argv) {
     cout << freq << endl; //printing final frequency
 
     //--------------------PART 2--------------------//
-    
+
 }
