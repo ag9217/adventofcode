@@ -15,6 +15,7 @@ int main(int argc, const char** argv) {
     char temp;
     int tempMax = 0;
     int tempIndex = 0;
+    int checksum = 0;
     string tempBoxID;
     int i = 2;
 
@@ -24,6 +25,7 @@ int main(int argc, const char** argv) {
 
     //looking at each string in vector
     for(int j = 0; j < boxIDs.size(); j++) {
+        letFreq.clear();
 
         //check letter frequency in string
         for(int k = 0; k < boxIDs[j].length(); k++) {
@@ -39,8 +41,21 @@ int main(int argc, const char** argv) {
             }
         }
 
-        for(int k = 0; k < letFreq.size(); k++) {
-                        
+        for(auto k : letFreq) {
+            std::map<int,int>::iterator it = pairs.find(k.second);
+
+            if(it != pairs.end()) {
+                it->second++;
+            }
+            
+            else {
+                pairs.insert(make_pair(k.second, 1));
+            }
         }
+    }
+
+    for(auto it = pairs.cbegin(); it != pairs.cend(); ++it)
+    {
+        std::cout << it->first << " " << it->second << "\n";
     }
 }
