@@ -11,6 +11,7 @@ int main(int argc, const char** argv) {
 
     vector<string> boxIDs;
     map<char, int> letFreq;
+    map<int, int> pairs;
     char temp;
     int tempMax = 0;
     int tempIndex = 0;
@@ -29,13 +30,17 @@ int main(int argc, const char** argv) {
             temp = boxIDs[j].at(k);
             std::map<char,int>::iterator it = letFreq.find(temp);
 
-            if(it != letFreq.end()) {
+            if(it != letFreq.end()) { //if letter found
                 it->second++;
             }
 
-            else {
+            else { //letter not found
                 letFreq.insert(make_pair(temp, 1));
             }
+        }
+
+        for(int k = 0; k < letFreq.size(); k++) {
+                        
         }
     }
 }
