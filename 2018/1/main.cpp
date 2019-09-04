@@ -26,7 +26,7 @@ int main(int argc, const char** argv) {
         freq += changes[i];
     }
 
-    cout << freq << endl; //printing final frequency
+    cout << freq << endl;
 
     //--------------------PART 2--------------------//
     std::vector<int> newFreqs; //vector containing new frequencies
@@ -47,5 +47,5 @@ int main(int argc, const char** argv) {
         }
     }
 
-    cout << freq << endl; //print duplicate freq
+    cout << freq << endl;
 }
