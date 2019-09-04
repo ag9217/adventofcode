@@ -9,14 +9,10 @@ int main(int argc, const char** argv) {
 
     //--------------------PART 1--------------------//
 
-    //vectors 
     std::vector<int> changes; //vector containing all frequency changes
-
-    //variables
     int inputNum;
     int freq = 0;
 
-    //opening input file
     std::ifstream file("input.txt", std::ifstream::in);
     
     //pushing all numbers in input file into vector
