@@ -1,61 +1,44 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include <map>
 
 using namespace std;
 
 int main(int argc, const char** argv) {
 
+    string line;
+    int doubles = 0;
+    int triples = 0;
+    int res = 0;
+    bool doubleFound = 0;
+    bool tripleFound = 0;
+
     std::ifstream file("input.txt", std::ifstream::in); //input file
 
-    vector<string> boxIDs;
-    map<char, int> letFreq;
-    map<int, int> pairs;
-    char temp;
-    int tempMax = 0;
-    int tempIndex = 0;
-    int checksum = 0;
-    string tempBoxID;
-    int i = 2;
+    while(getline(file, line)) { //read one line at a time
+        doubleFound = 0;
+        tripleFound = 0;
 
-    while(file >> tempBoxID) {
-        boxIDs.push_back(tempBoxID);
-    }
+        for(auto& c : line) { //looking at each character in string
+            res = 0;
 
-    //looking at each string in vector
-    for(int j = 0; j < boxIDs.size(); j++) {
-        letFreq.clear();
-
-        //check letter frequency in string
-        for(int k = 0; k < boxIDs[j].length(); k++) {
-            temp = boxIDs[j].at(k);
-            std::map<char,int>::iterator it = letFreq.find(temp);
-
-            if(it != letFreq.end()) { //if letter found
-                it->second++;
+            for(auto& d : line) { //searching for number of occurances of c
+                if(c == d)
+                    res++;
             }
 
-            else { //letter not found
-                letFreq.insert(make_pair(temp, 1));
+            if(res == 2 && !doubleFound) { //if double found
+                doubles++;
+                doubleFound = 1;
+            }
+
+            else if(res == 3 && !tripleFound) { //if triple found
+                triples++;
+                tripleFound = 1;
             }
         }
-
-        for(auto k : letFreq) {
-            std::map<int,int>::iterator it = pairs.find(k.second);
-
-            if(it != pairs.end()) {
-                it->second++;
-            }
-            
-            else {
-                pairs.insert(make_pair(k.second, 1));
-            }
-        }
+        line.clear();
     }
 
-    for(auto it = pairs.cbegin(); it != pairs.cend(); ++it)
-    {
-        std::cout << it->first << " " << it->second << "\n";
-    }
+    cout << doubles*triples << endl; //checksum
 }
