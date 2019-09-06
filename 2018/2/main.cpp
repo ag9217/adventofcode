@@ -75,7 +75,7 @@ int main(int argc, const char** argv) {
                 break;
             }
         }
-        if(diff)
+        if(diff = 1)
             break;
     } 
 }
