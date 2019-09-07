@@ -1,7 +1,6 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
-#include <cmath>
 
 using namespace std;
 
@@ -29,45 +28,11 @@ Claim::Claim(int ID, int x, int y, int width, int height)
     this->height = height;
 }
 
-Claim::~Claim()
-{
-}
-
-int findCommon(Claim a, Claim b) {
-    Claim furthest(0,0,0,0,0);
-    Claim shortest(0,0,0,0,0);
-    bool overlapping = 0;
-    int h = 0;
-    int w = 0;
-    float d1 = 0;
-    float d2 = 0;
-
-    //checking which claim is furthest from origin
-    d1 = sqrt((a.x) * (a.x) + (a.y) * (a.y));
-    d2 = sqrt((b.x) * (b.x) + (b.y) * (b.y));
-
-    if(d1 > d2) {
-        furthest = a;
-        shortest = b;
-    }
-    else {
-        furthest = b;
-        shortest = a;
-    }
-
-    //check if claims are overlapping
-    if((furthest.y < shortest.y + shortest.height) && (furthest.x < shortest.x + shortest.width))
-        overlapping = 1;
-    
-    if(overlapping)
-        return (shortest.height - (furthest.y - shortest.y)) * (shortest.width - (furthest.x - shortest.x));
-
-    if(!overlapping)
-        return 0;
-}
+Claim::~Claim() {}
 
 int main() {
     vector<Claim> claims;
+    int heatMap[1000][1000] = {0};
     string ID;
     string x;
     string y;
@@ -76,29 +41,30 @@ int main() {
     
     ifstream file("input.txt", std::ifstream::in); //input file
 
-    while(!file.eof()) {
+    while(!file.eof()) { //parsing file
         getline(file, ID, '#'); getline(file, ID, ' '); //ID
         getline(file, x, ' '); getline(file, x, ','); //x
         getline(file, y, ':'); //y
         getline(file, width, ' '); getline(file, width, 'x'); //width
         getline(file, height, '\n'); //height
 
-        //cout << "ID: " << ID << endl << "x: " << x << endl << "y: " << y << endl << "width: " << width << endl << "height: " << height  << endl;
         claims.push_back(Claim(stoi(ID), stoi(x), stoi(y), stoi(width), stoi(height)));
     }
 
-    cout << "Done loading claims" << endl;
-
     int commonInches = 0;
-    float percentFinished = 0;
 
-    cout << "Comparing claims" << endl;
-    for(int i = 0; i < claims.size(); i++) {
-        percentFinished = (float)i / claims.size();
-        cout << percentFinished*100 << "%" << endl;
-        
-        for(int j = i + 1; j < claims.size(); j++) {
-            commonInches += findCommon(claims[i], claims[j]);
+    for(auto& i : claims) {
+        for(int j = i.x; j < i.x + i.width; j++) {
+            for(int k = i.y; k < i.y + i.height; k++) {
+                heatMap[j][k]++;
+            }
+        }
+    }
+
+    for(int i = 0; i < 1000; i++) {
+        for(int j = 0; j < 1000; j++) {
+            if(heatMap[i][j] > 1)
+                commonInches++;
         }
     }
 
