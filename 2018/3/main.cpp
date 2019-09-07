@@ -31,6 +31,7 @@ Claim::Claim(int ID, int x, int y, int width, int height)
 Claim::~Claim() {}
 
 int main() {
+    //--------------------PART 1--------------------//
     vector<Claim> claims;
     int heatMap[1000][1000] = {0};
     string ID;
@@ -69,4 +70,22 @@ int main() {
     }
 
     cout << commonInches << endl;
+
+    //--------------------PART 2--------------------//
+    for(auto& i : claims) {
+    bool overlap = 0;
+        for(int j = i.x; j < i.x + i.width; j++) {
+            for(int k = i.y; k < i.y + i.height; k++) {
+                if(heatMap[j][k] == 1) //no overlap since only +1
+                    continue;
+
+                else
+                    overlap = 1;
+            }
+        }
+
+        if(!overlap) { //if no overlap tiles found after looking at entire claim
+            cout << "ID:" << i.ID << " does not overlap with other claims" << endl;
+        }
+    }
 }
