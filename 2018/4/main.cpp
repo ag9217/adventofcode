@@ -2,6 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include <map>
 
 using namespace std;
 
@@ -9,51 +10,92 @@ struct Date
 {
     int month;
     int day;
-};
-
-struct Guard
-{
-    int id;
     int startShift; //minus for before 00:00
-    int sleep;
-    int wakeup;
-    vector<Date> shifts; //dates when guard works
+    int startSleep = 0;
+    int endSleep = 0;
 };
 
+struct Schedule
+{
+    int sleepDuration;
+    vector<Date> shifts;
+};
 
 int main() {
-    ifstream file("test.txt", std::ifstream::in); //input file
+    ifstream file("input.txt", std::ifstream::in); //input file
+
     string line;
-    string tempid;
-    int hour = 0;
-    int min = 0;
+    vector<string> sortedLog;
+    map<int, Schedule> guards;
+    map<int,int>minuteSleep;
+    int guardID;
+    int sleepCount;
+    int sleepTime;
+    int minuteWithMaxSleep = 0;
 
-    vector<Guard*> sortedLog;
-
+    //sorting input
     while(getline(file, line)) {
-        std::size_t foundID = line.find('#');
-        if(foundID != std::string::npos) {
-            sortedLog.push_back(new Guard);
+        sortedLog.push_back(line);
+    }
+    sort(sortedLog.begin(), sortedLog.end());
 
-            Date date;
-            date.month = stoi(line.substr(6,2));
-            date.day = stoi(line.substr(9,2));
-            sortedLog[sortedLog.size() - 1]->shifts.push_back(date);
+    for(auto& i : sortedLog) {
+        Date date;
+        date.month = stoi(i.substr(6,2));
+        date.day = stoi(i.substr(9,2));
 
-            hour = stoi(line.substr(12,2));
-            min = stoi(line.substr(15,2));
+        if(i.find('#') != string::npos) {//line contains guard ID
+            guardID = 0;
+            sleepCount = 0;
 
+            Schedule schedule;
+
+            int hour = stoi(i.substr(12,2));
+            int min = stoi(i.substr(15,2));
             if(hour == 23)
-                sortedLog[sortedLog.size() - 1]->startShift = min - 60;
+                min = min - 60;
 
-            else
-                sortedLog[sortedLog.size() - 1]->startShift = min;
+            date.startShift = min;
 
-            tempid = line.substr(26, 4);
-            if(tempid.at(3) == ' ')
-                tempid = tempid.substr(0, tempid.size() - 1);
+            guardID = stoi(i.substr(26, 4));
 
-            sortedLog[sortedLog.size() - 1]->id = stoi(tempid);
+            guards[guardID].shifts.push_back(date);
+        }
+        if(i.find('l') != string::npos) {//line when guard falls asleep
+            sleepTime = stoi(i.substr(15,2));
+        }
+        if(i.find('w') != string::npos) {//line when guard wakes up
+            sleepCount = stoi(i.substr(15,2)) - sleepTime;
+            guards[guardID].sleepDuration += sleepCount;
+
+            date.startSleep = sleepTime;
+            date.endSleep = stoi(i.substr(15,2));
+            guards[guardID].shifts.push_back(date);
+
+            sleepTime = 0;
         }
     }
+
+    int currentMaxSleep = 0;
+    for(auto it = guards.cbegin(); it != guards.end(); it++) {
+        if(it->second.sleepDuration > currentMaxSleep) {
+            currentMaxSleep = it->second.sleepDuration;
+            guardID = it->first;
+        }
+    }
+
+    for(auto& i : guards[guardID].shifts) {
+        if(i.startSleep || i.endSleep) {
+            for(int j = i.startSleep; j < i.endSleep; j++) {
+                minuteSleep[j]++;
+            }
+        }
+    }
+
+    for(auto it = minuteSleep.cbegin(); it != minuteSleep.cend(); it++) {
+        if(it->second > minuteWithMaxSleep)
+            minuteWithMaxSleep = it->first;
+    }
+    cout << "ID: " << guardID << " minute: " << minuteWithMaxSleep << endl;
+    cout << "1: " << minuteWithMaxSleep*guardID << endl;
 }
