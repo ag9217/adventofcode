@@ -22,6 +22,7 @@ struct Schedule
 };
 
 int main() {
+    //--------------------PART 1--------------------//
     ifstream file("input.txt", std::ifstream::in); //input file
 
     string line;
@@ -98,4 +99,29 @@ int main() {
     }
     cout << "ID: " << guardID << " minute: " << minuteWithMaxSleep << endl;
     cout << "1: " << minuteWithMaxSleep*guardID << endl;
+
+    //--------------------PART 2--------------------//
+    int minute = 0;
+    int sleep = 0;
+
+    for(auto& i : guards) {
+        minuteSleep.clear();
+        for(auto& j : i.second.shifts) {
+            if(j.startSleep || j.endSleep) {
+                for(int k = j.startSleep; k < j.endSleep; k++) {
+                    minuteSleep[k]++;
+                }
+            }
+        }
+        for(auto it = minuteSleep.cbegin(); it != minuteSleep.cend(); it++) {
+            if(it->second > sleep) {
+                sleep = it->second;
+                minute = it->first;
+                guardID = i.first;
+            }
+        }
+    }
+
+    cout << "ID: " << guardID << " minute: " << minute << endl;
+    cout << "2: " << guardID * minute << endl;
 }
