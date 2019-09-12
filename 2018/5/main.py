@@ -1,5 +1,4 @@
 polymer = open('input.txt').read()
-print('inital size: {}'.format(len(polymer)))
 
 def reactPolymer(poly):
     while True:
@@ -19,10 +18,12 @@ def reactPolymer(poly):
             return poly
 
 #--------------------PART 1--------------------#
+print('inital size: {}'.format(len(polymer)))
 print('final size: {}'.format(len(reactPolymer(polymer))))
 
 #--------------------PART 2--------------------#
 pairs = {}
+#Finding polymer length after removing units
 for pol in polymer:
     if pol.lower() in pairs:
         continue
@@ -31,7 +32,7 @@ for pol in polymer:
         modifiedPolymer = modifiedPolymer.replace(pol.upper(), '')
         pairs[pol.lower()] = len(reactPolymer(modifiedPolymer))
 
-#Finding pair which caused lowest polymer count
+#Finding units which caused lowest polymer count
 pairMinLength = len(polymer)
 pair = None
 for p in pairs:
