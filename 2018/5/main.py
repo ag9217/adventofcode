@@ -2,12 +2,9 @@ polymer = open('input.txt').read()
 
 def reactPolymer(poly):
     while True:
-        previous = None
+        previous = '.'
         foundReaction = False
         for index,pol in enumerate(poly):
-            if previous is None: #if at begining of polymer
-                previous = pol
-                continue
             if pol != previous and pol.lower() == previous.lower(): #if pair found
                 poly = poly.replace(previous + pol,'',1)
                 foundReaction = True
